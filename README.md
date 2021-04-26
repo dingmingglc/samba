@@ -43,7 +43,7 @@ OR set local storage:
         -p          Set ownership and permissions on the shares
         -r          Disable recycle bin for shares
         -S          Disable SMB2 minimum version
-        -s "<name;/path>[;browse;readonly;guest;users;admins;writelist;comment]"
+        -s "<name;/path>[;browse;readonly;guest;users;admins;writelist;comment;readlist]"
                     Configure a share
                     required arg: "<name>;</path>"
                     <name> is how it's called for clients
@@ -57,6 +57,8 @@ OR set local storage:
                     [admins] allowed default:'none' or list of admin users
                     [writelist] list of users that can write to a RO share
                     [comment] description of share
+                    [readlist] list of users that can read to a RO share
+
         -u "<username;password>[;ID;group;GID]"       Add a user
                     required arg: "<username>;<passwd>"
                     <username> for user
@@ -71,6 +73,8 @@ OR set local storage:
         -I          Add an include option at the end of the smb.conf
                     required arg: "<include file path>"
                     <include file path> in the container, e.g. a bind mount
+        -f          disable user force user and force group 
+
 
     The 'command' (if provided and valid) will be run instead of samba
 
@@ -106,6 +110,32 @@ IE `SHARE` also will work for `SHARE2`, `SHARE3`... `SHAREx`, etc.
 
 Any of the commands can be run at creation with `docker run` or later with
 `docker exec -it samba samba.sh` (as of version 1.3 of docker).
+
+docker run -it --name samba --restart=always --network macvlan \
+
+docker run -it --name samba --restart=always \
+-p 139:139 -p 445:445 -p 137:137/udp -p 138:138/udp \
+-v /UsbData/Files/M:/mount/M \
+-v /UsbData/Files/U:/mount/U  \
+-v /UsbData/Files/V:/mount/V  \
+-v /UsbData/Files/D:/mount/D  \
+-v samba_data_etc:/etc  \
+-d dingmingglc/samba:v3  \
+-s "U;/mount/U;yes;yes;no;;;dm,zbr;临时文件;dm,zbr;"  \
+-s "M;/mount/M;yes;yes;no;;;dm,zbr;音乐文件;dm,zbr;"  \
+-s "V;/mount/V;yes;yes;no;;;dm,zbr;视频文件;dm,zbr;"  \
+-s "D;/mount/D;yes;yes;no;;;dm,zbr;下载文件;dm,zbr;"  \
+-u "dm;dm;2000;smb" \
+-u "zbr;zbr;3000;smb" \
+-n -S -w "SAMBAGROUP" -p \
+-g "netbios name=C8" \
+-g "access based share enum = yes" \
+-g "hide unreadable = yes" \
+-g "directory mask = 0770" \
+-g "create mask = 0660" \
+-f 
+
+
 
 ### Setting the Timezone
 
