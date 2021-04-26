@@ -53,7 +53,7 @@ echo '   fruit:time machine = yes' >>$file && \
 echo '   fruit:veto_appledouble = no' >>$file && \
 echo '   fruit:wipe_intentionally_left_blank_rfork = yes' >>$file && \
 echo '' >>$file && \
-file1="/etc/profile" && \
+#   file1="/etc/profile" && \
 #   echo -e "    alias ll='ls -alF'" >>$file1 && \
 echo 'alias ll="ls -alF"' >> ~/.bashrc && \
 rm -rf /tmp/*
