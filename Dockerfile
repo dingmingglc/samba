@@ -1,5 +1,4 @@
 FROM alpine
-MAINTAINER DingMingGlc <dingmingglc@gmail.com>
 
 # Install samba
 RUN apk --no-cache --no-progress upgrade && \
